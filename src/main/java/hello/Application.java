@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import sun.security.provider.certpath.OCSPResponse;
 
 import java.sql.Timestamp;
 
@@ -13,7 +14,7 @@ import java.sql.Timestamp;
 @RestController
 public class Application {
 
-	Timestamp timestamp;
+	Long timestamp = null;
 
 	@RequestMapping("/")
 	public String home() {
@@ -36,13 +37,14 @@ public class Application {
 	@RequestMapping("/health")
 	public String health() throws Exception {
 		if (timestamp == null) {
-			timestamp = new Timestamp(System.currentTimeMillis());
-			throw new Exception("Initialisation...");
+			timestamp = System.currentTimeMillis();
+			throw new Exception("Error");
+
 		}
 		if (timestamp != null) {
-			Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
-			if (currentTimestamp.after(timestamp)) {
-				throw new Exception("Initialisation...");
+			Long currentTimestamp = System.currentTimeMillis();
+			if (currentTimestamp < timestamp + 60*1000) {
+				throw new Exception("Error");
 			}
 		}
 		return "Ok";
