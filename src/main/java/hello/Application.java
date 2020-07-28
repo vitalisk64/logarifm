@@ -7,9 +7,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.sql.Timestamp;
+
 @SpringBootApplication
 @RestController
 public class Application {
+
+	Timestamp timestamp;
 
 	@RequestMapping("/")
 	public String home() {
@@ -28,6 +32,22 @@ public class Application {
 		}
 		return new Response("aa");
 	}
+
+	@RequestMapping("/health")
+	public String health() throws Exception {
+		if (timestamp == null) {
+			timestamp = new Timestamp(System.currentTimeMillis());
+			throw new Exception("Initialisation...");
+		}
+		if (timestamp != null) {
+			Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
+			if (currentTimestamp.after(timestamp)) {
+				throw new Exception("Initialisation...");
+			}
+		}
+		return "Ok";
+	}
+
 
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
