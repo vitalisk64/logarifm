@@ -1,0 +1,20 @@
+server:
+  port: 8080
+  servlet:
+      context-path: /logarithm
+
+management:
+  endpoint:
+    health:
+      show-details: "ALWAYS"
+      probes:
+        enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+    jmx:
+      exposure:
+        include: metrics
+  server:
+    port: 8081
